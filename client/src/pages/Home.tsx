@@ -1,25 +1,39 @@
-import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
-import { Streamdown } from 'streamdown';
-
 /**
- * All content in this page are only for example, replace with your own feature implementation
- * When building pages, remember your instructions in Frontend Best Practices, Design Guide and Common Pitfalls
+ * NEXUS OS — Main Page
+ * Void Interface: assembles the full OS shell
  */
-export default function Home() {
-  // If theme is switchable in App.tsx, we can implement theme toggling like this:
-  // const { theme, toggleTheme } = useTheme();
 
+import AmbientBackground from '@/components/AmbientBackground';
+import TopBar from '@/components/TopBar';
+import Sidebar from '@/components/Sidebar';
+import Dock from '@/components/Dock';
+import WorkspaceCanvas from '@/components/WorkspaceCanvas';
+import WidgetLayer from '@/components/WidgetLayer';
+import CommandPalette from '@/components/CommandPalette';
+import Onboarding from '@/components/Onboarding';
+import MinimizedWidgets from '@/components/MinimizedWidgets';
+
+export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col">
-      <main>
-        {/* Example: lucide-react for icons */}
-        <Loader2 className="animate-spin" />
-        Example Page
-        {/* Example: Streamdown for markdown rendering */}
-        <Streamdown>Any **markdown** content</Streamdown>
-        <Button variant="default">Example Button</Button>
-      </main>
+    <div style={{ position: 'fixed', inset: 0, overflow: 'hidden' }}>
+      {/* Layer 0: Ambient background */}
+      <AmbientBackground />
+
+      {/* Layer 1: OS Shell */}
+      <TopBar />
+      <Sidebar />
+      <WorkspaceCanvas />
+      <Dock />
+
+      {/* Layer 2: Floating widgets */}
+      <WidgetLayer />
+      <MinimizedWidgets />
+
+      {/* Layer 3: Overlays */}
+      <CommandPalette />
+
+      {/* Layer 4: Onboarding (highest z) */}
+      <Onboarding />
     </div>
   );
 }
