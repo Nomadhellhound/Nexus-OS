@@ -7,15 +7,20 @@ import { motion } from 'framer-motion';
 import { useNexus, WorkspaceMode } from '@/contexts/NexusContext';
 import { useState, useEffect } from 'react';
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import {
   Command, Layers, Zap, FlaskConical, Focus,
   ChevronDown, Wifi, Battery, Clock
 } from 'lucide-react';
 
-const MODES: { id: WorkspaceMode; label: string; icon: React.ReactNode; color: string }[] = [
-  { id: 'canvas',  label: 'Canvas',  icon: <Layers size={12} />,      color: '#22d3ee' },
-  { id: 'focus',   label: 'Focus',   icon: <Focus size={12} />,       color: '#a78bfa' },
-  { id: 'flow',    label: 'Flow',    icon: <Zap size={12} />,         color: '#34d399' },
-  { id: 'lab',     label: 'Lab',     icon: <FlaskConical size={12} />, color: '#fb923c' },
+const MODES: { id: WorkspaceMode; label: string; icon: React.ReactNode; color: string; description: string }[] = [
+  { id: 'canvas',  label: 'Canvas',  icon: <Layers size={12} />,      color: '#22d3ee', description: 'Infinite spatial canvas with all widgets' },
+  { id: 'focus',   label: 'Focus',   icon: <Focus size={12} />,       color: '#a78bfa', description: 'Distraction-free mode - full screen focus' },
+  { id: 'flow',    label: 'Flow',    icon: <Zap size={12} />,         color: '#34d399', description: 'Deep work state - optimized for flow' },
+  { id: 'lab',     label: 'Lab',     icon: <FlaskConical size={12} />, color: '#fb923c', description: 'Experimental workspace - test new ideas' },
 ];
 
 function Clock24() {
@@ -90,53 +95,67 @@ export default function TopBar() {
         style={{ background: 'oklch(0.10 0.018 265 / 0.8)', border: '1px solid oklch(1 0 0 / 0.07)' }}
       >
         {MODES.map(mode => (
-          <motion.button
-            key={mode.id}
-            onClick={() => setWorkspaceMode(mode.id)}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
-            className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs transition-all"
-            style={{
-              fontFamily: 'var(--font-body)',
-              fontSize: '11px',
-              fontWeight: workspaceMode === mode.id ? 600 : 400,
-              color: workspaceMode === mode.id ? mode.color : 'oklch(0.55 0.02 265)',
-              background: workspaceMode === mode.id
-                ? `oklch(0.14 0.02 265 / 0.9)`
-                : 'transparent',
-              boxShadow: workspaceMode === mode.id
-                ? `0 0 12px ${mode.color}30, inset 0 0 0 1px ${mode.color}25`
-                : 'none',
-              transition: 'all 0.18s cubic-bezier(0.23, 1, 0.32, 1)',
-            }}
-          >
-            <span style={{ color: workspaceMode === mode.id ? mode.color : 'oklch(0.45 0.02 265)' }}>
-              {mode.icon}
-            </span>
-            {mode.label}
-          </motion.button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <motion.button
+                key={mode.id}
+                onClick={() => setWorkspaceMode(mode.id)}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+                className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs transition-all"
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '11px',
+                  fontWeight: workspaceMode === mode.id ? 600 : 400,
+                  color: workspaceMode === mode.id ? mode.color : 'oklch(0.55 0.02 265)',
+                  background: workspaceMode === mode.id
+                    ? `oklch(0.14 0.02 265 / 0.9)`
+                    : 'transparent',
+                  boxShadow: workspaceMode === mode.id
+                    ? `0 0 12px ${mode.color}30, inset 0 0 0 1px ${mode.color}25`
+                    : 'none',
+                  transition: 'all 0.18s cubic-bezier(0.23, 1, 0.32, 1)',
+                }}
+              >
+                <span style={{ color: workspaceMode === mode.id ? mode.color : 'oklch(0.45 0.02 265)' }}>
+                  {mode.icon}
+                </span>
+                {mode.label}
+              </motion.button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" className="text-xs">
+              {mode.description}
+            </TooltipContent>
+          </Tooltip>
         ))}
       </div>
 
       {/* Right: Status + Command */}
       <div className="flex items-center gap-3">
         {/* Command Palette trigger */}
-        <motion.button
-          onClick={() => setCommandPaletteOpen(true)}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.97 }}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded text-xs"
-          style={{
-            background: 'oklch(0.12 0.02 265 / 0.7)',
-            border: '1px solid oklch(1 0 0 / 0.08)',
-            color: 'oklch(0.55 0.02 265)',
-            fontFamily: 'var(--font-mono)',
-            fontSize: '10px',
-          }}
-        >
-          <Command size={10} />
-          <span>⌘K</span>
-        </motion.button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <motion.button
+              onClick={() => setCommandPaletteOpen(true)}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded text-xs"
+              style={{
+                background: 'oklch(0.12 0.02 265 / 0.7)',
+                border: '1px solid oklch(1 0 0 / 0.08)',
+                color: 'oklch(0.55 0.02 265)',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '10px',
+              }}
+            >
+              <Command size={10} />
+              <span>⌘K</span>
+            </motion.button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom" className="text-xs">
+            Open command palette - search everything
+          </TooltipContent>
+        </Tooltip>
 
         <div className="w-px h-4" style={{ background: 'oklch(1 0 0 / 0.1)' }} />
 

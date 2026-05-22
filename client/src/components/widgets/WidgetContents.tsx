@@ -12,6 +12,11 @@ import {
   TrendingUp, Users, Zap, Eye, Star, GitBranch,
   Terminal, Globe, Code2, Palette, Database, Layers
 } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 /* ── Shared styles ── */
 const scrollStyle: React.CSSProperties = {
@@ -431,26 +436,41 @@ export function MusicWidget() {
 
       {/* Controls */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
-        <button onClick={() => setTrack(t => (t - 1 + TRACKS.length) % TRACKS.length)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'oklch(0.50 0.02 265)', transform: 'scaleX(-1)' }}>
-          <SkipForward size={14} />
-        </button>
-        <motion.button
-          onClick={() => setPlaying(!playing)}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          style={{
-            width: 36, height: 36, borderRadius: '50%',
-            background: 'linear-gradient(135deg, oklch(0.75 0.18 200 / 0.2), oklch(0.60 0.22 285 / 0.2))',
-            border: '1px solid oklch(0.75 0.18 200 / 0.35)',
-            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: 'oklch(0.75 0.18 200)',
-          }}
-        >
-          {playing ? <Pause size={14} /> : <Play size={14} />}
-        </motion.button>
-        <button onClick={() => setTrack(t => (t + 1) % TRACKS.length)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'oklch(0.50 0.02 265)' }}>
-          <SkipForward size={14} />
-        </button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button onClick={() => setTrack(t => (t - 1 + TRACKS.length) % TRACKS.length)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'oklch(0.50 0.02 265)', transform: 'scaleX(-1)' }}>
+              <SkipForward size={14} />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom" className="text-xs">Previous track</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <motion.button
+              onClick={() => setPlaying(!playing)}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              style={{
+                width: 36, height: 36, borderRadius: '50%',
+                background: 'linear-gradient(135deg, oklch(0.75 0.18 200 / 0.2), oklch(0.60 0.22 285 / 0.2))',
+                border: '1px solid oklch(0.75 0.18 200 / 0.35)',
+                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: 'oklch(0.75 0.18 200)',
+              }}
+            >
+              {playing ? <Pause size={14} /> : <Play size={14} />}
+            </motion.button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom" className="text-xs">{playing ? 'Pause' : 'Play'}</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button onClick={() => setTrack(t => (t + 1) % TRACKS.length)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'oklch(0.50 0.02 265)' }}>
+              <SkipForward size={14} />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom" className="text-xs">Next track</TooltipContent>
+        </Tooltip>
         <Volume2 size={12} style={{ color: 'oklch(0.40 0.02 265)', marginLeft: 4 }} />
       </div>
     </div>
@@ -458,15 +478,15 @@ export function MusicWidget() {
 }
 
 /* ─────────────── LAUNCHER ─────────────── */
-const APPS = [
-  { icon: <Globe size={16} />, label: 'Browser', color: '#60a5fa' },
-  { icon: <Terminal size={16} />, label: 'Terminal', color: '#34d399' },
-  { icon: <Code2 size={16} />, label: 'Code', color: '#a78bfa' },
-  { icon: <Palette size={16} />, label: 'Design', color: '#f472b6' },
-  { icon: <Database size={16} />, label: 'Data', color: '#fb923c' },
-  { icon: <Layers size={16} />, label: 'Canvas', color: '#22d3ee' },
-  { icon: <GitBranch size={16} />, label: 'Git', color: '#fbbf24' },
-  { icon: <Sparkles size={16} />, label: 'AI', color: '#e879f9' },
+const APPS: Array<{icon: React.ReactNode; label: string; color: string; description: string; action: () => void}> = [
+  { icon: <Globe size={16} />, label: 'Browser', color: '#60a5fa', description: 'Open web browser', action: () => window.open('https://www.google.com', '_blank') },
+  { icon: <Terminal size={16} />, label: 'Terminal', color: '#34d399', description: 'System terminal', action: () => alert('Terminal: Open your system terminal') },
+  { icon: <Code2 size={16} />, label: 'Code', color: '#a78bfa', description: 'Code editor', action: () => alert('Code: Open your code editor') },
+  { icon: <Palette size={16} />, label: 'Design', color: '#f472b6', description: 'Design tools', action: () => alert('Design: Open design application') },
+  { icon: <Database size={16} />, label: 'Data', color: '#fb923c', description: 'Database manager', action: () => alert('Data: Open database tools') },
+  { icon: <Layers size={16} />, label: 'Canvas', color: '#22d3ee', description: 'Infinite canvas', action: () => alert('Canvas: Already here!') },
+  { icon: <GitBranch size={16} />, label: 'Git', color: '#fbbf24', description: 'Version control', action: () => alert('Git: Open git client') },
+  { icon: <Sparkles size={16} />, label: 'AI', color: '#e879f9', description: 'AI assistant', action: () => alert('AI: Open AI tools') },
 ];
 
 export function LauncherWidget() {
@@ -475,25 +495,31 @@ export function LauncherWidget() {
       <div style={{ ...labelStyle, marginBottom: 10 }}>Quick Launch</div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
         {APPS.map(app => (
-          <motion.button
-            key={app.label}
-            whileHover={{ scale: 1.08, y: -2 }}
-            whileTap={{ scale: 0.93 }}
-            onClick={() => {}}
-            style={{
-              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5,
-              padding: '10px 4px', borderRadius: 10,
-              background: `${app.color}0D`,
-              border: `1px solid ${app.color}20`,
-              cursor: 'pointer',
-              transition: 'box-shadow 0.15s',
-            }}
-          >
-            <span style={{ color: app.color }}>{app.icon}</span>
-            <span style={{ fontSize: '9px', fontFamily: 'var(--font-body)', color: 'oklch(0.60 0.02 265)' }}>
-              {app.label}
-            </span>
-          </motion.button>
+          <Tooltip key={app.label}>
+            <TooltipTrigger asChild>
+              <motion.button
+                whileHover={{ scale: 1.08, y: -2 }}
+                whileTap={{ scale: 0.93 }}
+                onClick={app.action}
+                style={{
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5,
+                  padding: '10px 4px', borderRadius: 10,
+                  background: `${app.color}0D`,
+                  border: `1px solid ${app.color}20`,
+                  cursor: 'pointer',
+                  transition: 'box-shadow 0.15s',
+                }}
+              >
+                <span style={{ color: app.color }}>{app.icon}</span>
+                <span style={{ fontSize: '9px', fontFamily: 'var(--font-body)', color: 'oklch(0.60 0.02 265)' }}>
+                  {app.label}
+                </span>
+              </motion.button>
+            </TooltipTrigger>
+            <TooltipContent side="right" className="text-xs">
+              {app.description}
+            </TooltipContent>
+          </Tooltip>
         ))}
       </div>
     </div>
