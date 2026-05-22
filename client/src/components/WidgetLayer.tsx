@@ -9,6 +9,9 @@ import {
   NotesWidget, TasksWidget, AIWidget, ProjectsWidget,
   StatsWidget, MusicWidget, LauncherWidget, WorkflowWidget,
 } from './widgets/WidgetContents';
+import { TerminalWidget } from './widgets/TerminalWidget';
+import { WhatsAppWidget } from './widgets/WhatsAppWidget';
+import { BrowserWidget } from './widgets/BrowserWidget';
 
 function WidgetContent({ type }: { type: Widget['type'] }) {
   switch (type) {
@@ -20,6 +23,9 @@ function WidgetContent({ type }: { type: Widget['type'] }) {
     case 'music':    return <MusicWidget />;
     case 'launcher': return <LauncherWidget />;
     case 'workflow': return <WorkflowWidget />;
+    case 'terminal': return <TerminalWidget />;
+    case 'whatsapp': return <WhatsAppWidget />;
+    case 'browser':  return <BrowserWidget />;
     default:         return null;
   }
 }

@@ -1,16 +1,17 @@
 /**
- * NEXUS OS — Global State Context
+ * NEXUS OS — Global State Context with Persistence
  * Void Interface Design System
  * Manages: workspace modes, widgets, projects, command palette, onboarding
+ * Persists all state to localStorage automatically
  */
 
-import React, { createContext, useContext, useState, useCallback, useRef } from 'react';
+import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
 
 export type WorkspaceMode = 'canvas' | 'focus' | 'flow' | 'lab';
 
 export interface Widget {
   id: string;
-  type: 'notes' | 'tasks' | 'ai' | 'projects' | 'stats' | 'music' | 'launcher' | 'workflow';
+  type: 'notes' | 'tasks' | 'ai' | 'projects' | 'stats' | 'music' | 'launcher' | 'workflow' | 'terminal' | 'whatsapp' | 'browser';
   title: string;
   x: number;
   y: number;
@@ -69,6 +70,9 @@ const WIDGET_DEFAULTS: Record<Widget['type'], Partial<Widget>> = {
   music:    { title: 'Music',         width: 280, height: 160 },
   launcher: { title: 'Quick Launch',  width: 300, height: 360 },
   workflow: { title: 'Workflow',      width: 400, height: 460 },
+  terminal: { title: 'Terminal',      width: 600, height: 400 },
+  whatsapp: { title: 'WhatsApp',      width: 350, height: 500 },
+  browser:  { title: 'Browser',       width: 800, height: 600 },
 };
 
 const SAMPLE_PROJECTS: Project[] = [
@@ -79,20 +83,62 @@ const SAMPLE_PROJECTS: Project[] = [
   { id: 'p5', name: 'Content Studio', description: 'Media & publishing', color: '#f472b6', emoji: '✍️', lastModified: new Date(Date.now() - 345600000), tags: ['content', 'media'], starred: false },
 ];
 
+const STORAGE_KEY = 'nexus-os-state';
+const ONBOARDING_KEY = 'nexus-onboarding';
+
+// Serialization helpers
+function serializeState(state: NexusState): string {
+  return JSON.stringify({
+    ...state,
+    projects: state.projects.map(p => ({
+      ...p,
+      lastModified: p.lastModified.toISOString(),
+    })),
+  });
+}
+
+function deserializeState(json: string): NexusState {
+  const parsed = JSON.parse(json);
+  return {
+    ...parsed,
+    projects: parsed.projects.map((p: any) => ({
+      ...p,
+      lastModified: new Date(p.lastModified),
+    })),
+  };
+}
+
 const NexusContext = createContext<NexusContextValue | null>(null);
 
 export function NexusProvider({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState<NexusState>(() => ({
-    workspaceMode: 'canvas',
-    widgets: [],
-    projects: SAMPLE_PROJECTS,
-    activeProjectId: 'p1',
-    commandPaletteOpen: false,
-    onboardingComplete: localStorage.getItem('nexus-onboarding') === 'done',
-    sidebarCollapsed: false,
-    topWidgetZ: 100,
-    activeWidgetId: null,
-  }));
+  const [state, setState] = useState<NexusState>(() => {
+    // Load from localStorage or use defaults
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      try {
+        return deserializeState(stored);
+      } catch (e) {
+        console.error('Failed to load saved state:', e);
+      }
+    }
+
+    return {
+      workspaceMode: 'canvas',
+      widgets: [],
+      projects: SAMPLE_PROJECTS,
+      activeProjectId: 'p1',
+      commandPaletteOpen: false,
+      onboardingComplete: localStorage.getItem(ONBOARDING_KEY) === 'done',
+      sidebarCollapsed: false,
+      topWidgetZ: 100,
+      activeWidgetId: null,
+    };
+  });
+
+  // Auto-save state to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, serializeState(state));
+  }, [state]);
 
   const setWorkspaceMode = useCallback((mode: WorkspaceMode) => {
     setState(s => ({ ...s, workspaceMode: mode }));
@@ -174,7 +220,7 @@ export function NexusProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const setOnboardingComplete = useCallback((done: boolean) => {
-    if (done) localStorage.setItem('nexus-onboarding', 'done');
+    if (done) localStorage.setItem(ONBOARDING_KEY, 'done');
     setState(s => ({ ...s, onboardingComplete: done }));
   }, []);
 

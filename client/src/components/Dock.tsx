@@ -8,7 +8,7 @@ import { useNexus, Widget } from '@/contexts/NexusContext';
 import { useRef } from 'react';
 import {
   StickyNote, CheckSquare, Sparkles, FolderKanban,
-  BarChart3, Music2, Rocket, GitBranch, Command
+  BarChart3, Music2, Rocket, GitBranch, Command, Terminal, MessageCircle, Globe
 } from 'lucide-react';
 
 interface DockItem {
@@ -27,6 +27,9 @@ const DOCK_ITEMS: DockItem[] = [
   { type: 'music',    icon: <Music2 size={18} />,        label: 'Music',       color: '#f472b6' },
   { type: 'launcher', icon: <Rocket size={18} />,        label: 'Launcher',    color: '#60a5fa' },
   { type: 'workflow', icon: <GitBranch size={18} />,     label: 'Workflow',    color: '#4ade80' },
+  { type: 'terminal', icon: <Terminal size={18} />,      label: 'Terminal',    color: '#06b6d4' },
+  { type: 'whatsapp', icon: <MessageCircle size={18} />, label: 'WhatsApp',    color: '#25d366' },
+  { type: 'browser',  icon: <Globe size={18} />,         label: 'Browser',     color: '#ff6b35' },
 ];
 
 function DockIcon({ item, mouseX }: { item: DockItem; mouseX: ReturnType<typeof useMotionValue<number>> }) {
