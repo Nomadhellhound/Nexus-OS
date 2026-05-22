@@ -11,7 +11,7 @@ export type WorkspaceMode = 'canvas' | 'focus' | 'flow' | 'lab';
 
 export interface Widget {
   id: string;
-  type: 'notes' | 'tasks' | 'ai' | 'projects' | 'stats' | 'music' | 'launcher' | 'workflow' | 'terminal' | 'whatsapp' | 'browser' | 'clickup';
+  type: 'notes' | 'tasks' | 'ai' | 'projects' | 'stats' | 'music' | 'launcher' | 'workflow' | 'terminal' | 'whatsapp' | 'browser' | 'clickup' | 'email';
   title: string;
   x: number;
   y: number;
@@ -74,6 +74,7 @@ const WIDGET_DEFAULTS: Record<Widget['type'], Partial<Widget>> = {
   whatsapp: { title: 'WhatsApp',      width: 350, height: 500 },
   browser:  { title: 'Browser',       width: 800, height: 600 },
   clickup:  { title: 'ClickUp Tasks', width: 340, height: 480 },
+  email:    { title: 'Email',         width: 500, height: 500 },
 };
 
 const SAMPLE_PROJECTS: Project[] = [

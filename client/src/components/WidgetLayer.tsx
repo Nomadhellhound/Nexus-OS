@@ -13,6 +13,7 @@ import { TerminalWidget } from './widgets/TerminalWidget';
 import { WhatsAppWidget } from './widgets/WhatsAppWidget';
 import { BrowserWidget } from './widgets/BrowserWidget';
 import { ClickUpWidget } from './widgets/ClickUpWidget';
+import { EmailWidget } from './widgets/EmailWidget';
 
 function WidgetContent({ type }: { type: Widget['type'] }) {
   switch (type) {
@@ -28,6 +29,7 @@ function WidgetContent({ type }: { type: Widget['type'] }) {
     case 'whatsapp': return <WhatsAppWidget />;
     case 'browser':  return <BrowserWidget />;
     case 'clickup':  return <ClickUpWidget />;
+    case 'email':    return <EmailWidget />;
     default:         return null;
   }
 }
