@@ -12,6 +12,7 @@ import {
 import { TerminalWidget } from './widgets/TerminalWidget';
 import { WhatsAppWidget } from './widgets/WhatsAppWidget';
 import { BrowserWidget } from './widgets/BrowserWidget';
+import { ClickUpWidget } from './widgets/ClickUpWidget';
 
 function WidgetContent({ type }: { type: Widget['type'] }) {
   switch (type) {
@@ -26,6 +27,7 @@ function WidgetContent({ type }: { type: Widget['type'] }) {
     case 'terminal': return <TerminalWidget />;
     case 'whatsapp': return <WhatsAppWidget />;
     case 'browser':  return <BrowserWidget />;
+    case 'clickup':  return <ClickUpWidget />;
     default:         return null;
   }
 }
