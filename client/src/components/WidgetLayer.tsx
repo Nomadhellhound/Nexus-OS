@@ -14,6 +14,7 @@ import { WhatsAppWidget } from './widgets/WhatsAppWidget';
 import { BrowserWidget } from './widgets/BrowserWidget';
 import { ClickUpWidget } from './widgets/ClickUpWidget';
 import { EmailWidget } from './widgets/EmailWidget';
+import { AutomationDashboard } from './widgets/AutomationDashboard';
 
 function WidgetContent({ type }: { type: Widget['type'] }) {
   switch (type) {
@@ -30,6 +31,7 @@ function WidgetContent({ type }: { type: Widget['type'] }) {
     case 'browser':  return <BrowserWidget />;
     case 'clickup':  return <ClickUpWidget />;
     case 'email':    return <EmailWidget />;
+    case 'automation': return <AutomationDashboard />;
     default:         return null;
   }
 }
